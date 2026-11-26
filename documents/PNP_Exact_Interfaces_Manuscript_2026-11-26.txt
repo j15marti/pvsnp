@@ -1,0 +1,1204 @@
+TEXT EDITION OF THE NOVEMBER 26, 2026 MANUSCRIPT
+Extracted from the original 21-page PDF. Mathematical superscripts, subscripts, figure layout and pagination may be degraded by extraction; consult the typeset PDF for authoritative notation. The mathematical claim is conditional, not a resolution of P versus NP.
+
+<PARSED TEXT FOR PAGE: 1 / 21>
+
+                    Exact Forest and Algebraic Interfaces
+                              for Satisfiability
+              A constructive framework and a conditional theorem for P = NP
+
+                                            Jeremy Martinez
+                                      P versus NP Research Program
+
+                                          26 November 2026
+                Research manuscript prepared with AI assistance for mathematical review
+
+
+
+                                                  Abstract
+          We strengthen a constructive satisfiability framework based on simultaneous forest partitions,
+     exact activation signals, local matching, and algebraic interfaces. For proper monotone 3-SAT
+     with exactly two occurrences of each polarity per variable, every crossing graph is the line
+     graph of an explicitly constructed subcubic multigraph. Minimum crossing covers are therefore
+     acquired exactly in polynomial time by maximum matching. This yields a query-specific local
+     extension algorithm and improves the combined signal terminal to 2τmax +6k poly( N ), for an integer
+     fractional-guard budget k. We also strengthen the representation-specific conservation inequality
+     to ρsignal + 7τΣ ≥ n/3.
+          For independent private modules coupled by a binary linear equation, we prove an exact
+     dynamic program whose states lie in intersections of internal and external linear spans. Its
+     aggregate cost permits polynomially many local exponential computations without multiplying
+     all local choices together. An infinite family of strictly rank-expanding punctured-plane systems
+     has interface width at most two and is solved by this method. We integrate a recently developed
+     exact solver for 2-CNF plus bounded-rank affine constraints, and give a strict polynomial-potential
+     criterion for cooperative recursive work.
+         These results prove additional restricted algorithms and a conditional implication to P = NP.
+     The universal theorem needed to acquire an affordable interface or productive contraction on
+     every relevant residual remains unproved. Accordingly, this manuscript does not establish an
+     unconditional resolution of P versus NP.
+
+Keywords. Satisfiability; exact interfaces; line graphs; matching; affine constraints; branch decompo-
+sitions; aggregate complexity.
+
+
+1   Scope and the constructive objective
+
+The original forest-interface manuscript [1] develops exact transformations and several restricted
+polynomial terminals, then isolates a universal progress conjecture. A subsequent revision [2]
+improves hereditary bookkeeping and a crossing-cover exponent. The present revision adds complete
+proofs of stronger crossing-graph structure, a sharper conservation inequality, exact algebraic gluing,
+and a more flexible aggregate complexity certificate. It also incorporates selected source-independent
+results from the research reports produced during the eight-hour window ending at 07:48 Pacific on
+26 November 2026.
+
+
+
+                                                      1
+
+<PARSED TEXT FOR PAGE: 2 / 21>
+
+Exact interfaces for satisfiability                                                     26 November 2026
+
+
+   The decision problem, the representation, and the computational charge must be kept separate.
+We use the following source throughout the forest and signal sections.
+
+Definition 1.1 (Balanced monotone source). A balanced source is a CNF formula F in which every
+clause contains three distinct variables, every clause is either entirely positive or entirely negative, no
+clause is duplicated, and each variable occurs exactly twice positively and twice negatively. If n is the
+number of variables and m the number of clauses, then m = 4n/3. The encoded input length is N.
+
+    This class is NP-complete [3]. The notation (2, 2) specifies occurrence counts. It does not mean
+an exact-two-of-four constraint. Recent reports using the latter source [4] can contribute source-
+independent lemmas, but their geometric promises and source-specific reductions do not automati-
+cally apply to Definition 1.1.
+   All algorithms are deterministic and uniform in an ordinary bit model. Every use of poly( N )
+denotes a fixed polynomial whose exponent is independent of the input and of the varying structural
+parameters. The charge includes parsing, representation conversion, candidate acquisition, failed
+probes, exact arithmetic, every recursive child actually executed, stored tables, witness reconstruction,
+and final source verification. A supplied decomposition is explicitly identified as supplied; its
+verification does not imply efficient discovery.
+
+Definition 1.2 (Authenticated transformation). An authenticated transformation records a precise
+relation between a parent constraint system and its successors, together with an effective witness map.
+A decision-preserving restriction retains at least one witness whenever the parent is satisfiable. An
+exact boundary projection preserves every extendible boundary assignment. An AND decomposition
+requires jointly compatible witnesses for all children; an OR decomposition requires a witness for at
+least one child. The compatibility operation and the cost of evaluating it are part of the transformation.
+
+   The principal new results are Theorems 4.1, 6.3, 7.1, and 8.1. The conditional endpoint is Theo-
+rem 11.3. The latter is deliberately stated with its unresolved hypothesis visible. None of the finite
+audits in Section 12 is used as a substitute for a universal theorem.
+
+
+2    Simultaneous forests and their precise scope
+
+Form a positive clause multigraph G+ whose vertices are positive clauses. Each source variable is an
+edge joining its two positive occurrences. Define G− analogously. The two graphs have a common
+ground set E, namely the source variables. They are loopless and cubic. Three parallel edges would
+give identical ternary clauses, so they do not occur.
+
+Lemma 2.1 (The two graphic rank bounds). For every S ⊆ E,
+
+                                      |S| ≤ 2r+ (S),       |S| ≤ 2r− (S),
+
+where r± are the graphic matroid ranks.
+
+Proof. Consider a connected component of either graph induced by S, with v incident vertices and e
+edges. If v = 2, then e ≤ 2 = 2(v − 1). If v = 3, maximum degree three gives e ≤ 4 = 2(v − 1). If
+v ≥ 4, then e ≤ 3v/2 ≤ 2(v − 1). There are no loop components. Summing e ≤ 2(v − 1) over the
+nontrivial components proves the claim.
+
+
+                                                       2
+
+<PARSED TEXT FOR PAGE: 3 / 21>
+
+Exact interfaces for satisfiability                                                        26 November 2026
+
+
+Theorem 2.2 (Polynomial simultaneous forest acquisition). Every balanced source admits a partition
+E = E+ ∪˙ E− such that E+ is a forest in G+ and E− is a forest in G− . Such a partition is constructible in
+deterministic polynomial time.
+
+Proof. Lemma 2.1 implies
+                                      |S| ≤ r+ (S) + r− (S)     ( S ⊆ E ).
+The matroid union criterion gives a partition into independent sets of the two graphic matroids, and
+its augmenting algorithm constructs the partition in polynomial time [5].
+
+    Assign preference pv = 0 to variables of E+ and pv = 1 to variables of E− . Under yv = xv ⊕ pv ,
+an occurrence that is positive in y is called an owner occurrence. Thus each variable owns two source
+clauses. The owner incidence graphs are subdivisions of the acquired forests. A co-owner block is a
+connected component obtained by joining variables that own the same clause; isolated variables are
+included.
+
+Proposition 2.3 (Hereditary forest certificates). A simultaneous forest certificate remains valid after
+variable pinning and clause deletion, when removed occurrence endpoints are replaced by distinct private leaves
+and surviving edges retain their colors.
+
+Proof. Pinning a variable deletes its edge from both occurrence graphs. Deleting a clause splits its
+vertex into separate degree-one endpoints for the remaining incident edges. Edge deletion and vertex
+splitting cannot create a cycle in a previously acyclic edge set. Unsatisfied clauses shortened by a pin
+retain their surviving incidences. Therefore the retained color classes remain forests.
+
+   This proposition applies to a monotone core retained with occurrence identities. Arbitrary
+substitution or elimination can create new clauses and new incidences; those operations require
+new certificates. The balanced identity m = 4n/3 likewise belongs to the original source and is not
+inherited by arbitrary residuals.
+
+Proposition 2.4 (A supplied target is cheaply reachable). Given two valid partitions into independent
+sets of two matroids, one can move from the first to the second through at most one vacant element at a time,
+using at most 2d opening, exchange, and closing events and exactly d permanent color corrections, where d is
+the initial Hamming distance.
+
+Proof. Remove a miscolored element to create a vacancy. Try to insert the vacant element in its target
+color. If insertion is independent, close the vacancy. Otherwise the fundamental circuit contains
+an element currently in that color but not assigned that color by the target: if all circuit elements
+belonged to the target class, that target class would be dependent. Exchange such an element for
+the vacant one. The inserted element is now correctly colored and never needs to move again; the
+removed element becomes the vacancy. Every exchange or successful closing corrects one element.
+There are d corrections and at most d openings.
+
+    The proposition is a target-directed reconfiguration statement. It neither discovers a favorable
+target nor bounds the number of targets that might need to be examined.
+
+
+
+
+                                                      3
+
+<PARSED TEXT FOR PAGE: 4 / 21>
+
+Exact interfaces for satisfiability                                                                    26 November 2026
+
+
+3    Exact activation signals
+
+Fix any preference word, whether or not obtained from Theorem 2.2. Within a co-owner block all
+variables have the same preference. Consequently a clause owned by that block has only positive
+internal y-literals. Its external literals are negative.
+    For every clause C and every external block B meeting its negative literals, introduce a signal for
+the conjunction of those block variables. Identical conjunction supports in a block share one signal.
+Write o B (y B ) for the vector of actual outgoing conjunction values and sout( B) for their proposed upper
+bounds.
+    For a clause owned by B, let CB (y B ) be the positive disjunction of its owners, and let AC be the
+set of external signals. Define
+                                                             (                     )
+                                                                ⋀             ⋀
+                 R B (s) = ∃y B o B (y B ) ≤ sout( B) ∧                              s a =⇒ CB (y B )  .                (1)
+                                                           C owned by B      a ∈ AC
+
+
+An empty activation conjunction is true. An ownerless clause contributes the constraint ¬
+                                                                                                               ⋀
+                                                                                                                   a ∈ AC s a .
+Let G (s) be the conjunction of these constraints. The total number of signals is O( N ).
+
+Theorem 3.1 (Exact upper-bound projection).
+                                                                     ⋀
+                             F is satisfiable   ⇐⇒         G (s) ∧       R B (s) is satisfiable.
+                                                                     B
+
+A feasible signal word and independent local witnesses determine a source witness in polynomial time.
+
+Proof. For a source witness, take every signal equal to its actual conjunction value. Every owned
+clause is either deactivated by a false external conjunction or has a true owner. Every ownerless
+clause has a false conjunction.
+    Conversely, choose local witnesses for the same signal word. If all external negative literals of an
+owned clause are false, every actual external conjunction is one. Its upper-bound signal is therefore
+one, so the corresponding local obligation forces a true owner. An ownerless clause cannot have all
+actual conjunctions equal to one because that would force all its signals to one and violate G. The
+local private domains are disjoint, so their witnesses combine. Finally undo y = x ⊕ p.
+
+     The projection preserves existence and supplies witness lifts. It is not a bijection of models, and
+its feasibility proof does not justify exact counting.
+
+Lemma 3.2 (Minimal signal pins for local extension). To answer a partial-assignment extension query
+for R B , set every unpinned incoming signal to zero and every unpinned outgoing upper bound to one.
+The remaining local problem consists of positive activated owner clauses and negative caps on outgoing
+conjunctions.
+
+Proof. Lowering an incoming signal only removes obligations, and raising an outgoing bound only
+relaxes an inequality. Thus the stated completion is the least restrictive completion consistent with
+the query. It is feasible exactly when some completion is feasible.
+
+
+
+
+                                                            4
+
+<PARSED TEXT FOR PAGE: 5 / 21>
+
+Exact interfaces for satisfiability                                                           26 November 2026
+
+
+4    Optimal crossing covers by matching
+
+Let S B be the distinct nonsingleton outgoing supports of block B. Each support has size two or three.
+            ⋃
+Put DB = S∈SB S, and define JB on DB by joining two variables that occur in the same support.
+Write τB for its minimum vertex-cover cardinality.
+Theorem 4.1 (The crossing graph is a line graph). There is an explicitly constructible loopless multigraph
+HB of maximum degree at most three such that
+
+                                      JB = L ( HB ),     τB = | DB | − ν( HB ),
+
+where ν( HB ) is the maximum matching cardinality. An optimal crossing cover is acquired in polynomial time.
+
+Proof. Every variable belongs to at most two distinct supports in S B , because it has only two negative
+normalized source occurrences. Create one vertex aS for each support S. A variable v belonging to
+two supports S, T becomes an edge ev = aS a T . If it belongs to one support S, create a private dummy
+dv and the edge ev = aS dv . Distinct variables may create parallel edges, but no loop is created. The
+degree of aS is |S| ≤ 3, and dummy vertices have degree one.
+    Two edges ev , ew meet exactly when v, w share a support. Hence the label correspondence gives
+JB = L( HB ). Independent sets in a line graph are precisely matchings in its root multigraph. The
+complement of a maximum independent set is a minimum vertex cover. General maximum matching
+is polynomial-time computable [6]; parallel edges may be represented by one edge for cardinality
+computation while retaining a chosen source label.
+
+
+                                         HB                               JB = L ( HB )
+
+                                  a       b        c
+                                                                      a        b          c
+                             maximum matching { a, c}             minimum cover {b}
+
+
+Figure 1: A structural example with outgoing supports { a, b} and {b, c}. Matching selects the
+variables outside an optimal crossing cover.
+
+Theorem 4.2 (Query-specific local extension). For a partial signal query Q, let JB ( Q) use only the
+nonsingleton conjunctions whose bounds are pinned to zero. Its optimal cover is acquired in polynomial time,
+and the query is answered with a witness in
+
+                                                  2τB (Q) poly( N )
+
+bit operations. In particular, τB ( Q) ≤ τB .
+
+Proof. Apply Theorem 4.1 to the selected supports and enumerate the assignments to an optimal
+cover C. Because C hits every pair in a capped conjunction, each such conjunction has at most one
+variable outside C. In a branch it is already false, gives a contradiction, or forces that one variable to
+zero. Include singleton caps as negative units. After rejecting contradictory branches, set all other
+free variables to one.
+    The remaining obligations are positive clauses. The constructed assignment maximizes their
+values while satisfying every cap. Therefore a branch has an extension exactly when this assignment
+satisfies all active clauses. There are 2|C| branches, and every reported witness is directly checked.
+
+                                                         5
+
+<PARSED TEXT FOR PAGE: 6 / 21>
+
+Exact interfaces for satisfiability                                                           26 November 2026
+
+
+   The line-graph theorem does not require the owner block to be a tree. It persists under pinning
+and deletion while the original occurrence bound is retained. It need not persist after an arbitrary
+semantic elimination introduces new supports.
+
+
+5    The projected fractional terminal with all costs charged
+
+For an explicitly listed finite family of relations on a common signal set, let C be the union of their
+prime implicates. Every relation has such a CNF representation, although it may be exponentially
+large. Define                     {                                              }
+                                            w(v) + w(¬v) + gv = 1, w, g ≥ 0,
+                     ρ(C) = min ∑ gv :                                             .                (2)
+                                    v       ∑ℓ∈C w(ℓ) ≤ 1 (C ∈ C)
+For the signal factors in Section 3, this quantity is ρsignal . A CNF with g = 0 is q-Horn. Standard
+q-Horn algorithms and parameterized backdoors are treated in [7].
+
+Lemma 5.1 (Six-factor rounding). For any feasible solution of (2), one can choose at most 6 ∑v gv guard
+variables so that all remaining literal weights round to 0, 12 , 1 and every clause has rounded weight at most one.
+
+Proof. Write av = min{w(v), w(¬v)}. Choose a common threshold θ ∈ (1/3, 1/2) avoiding all
+endpoints. If θ < av , round both literal weights to 1/2. If θ > av + gv , round the larger weight to one
+and the smaller to zero. Otherwise guard v.
+   Every rounded half-weight literal originally had weight greater than θ, and every rounded unit-
+weight literal originally had weight greater than 1 − θ. A clause of rounded weight greater than one
+must contain two unit weights, one unit and one half weight, or three half weights. In each case the
+corresponding original weights sum to more than one, a contradiction.
+    Under a uniform threshold, the probability that v is guarded is at most 6gv . Thus one interval
+between consecutive endpoints has at most 6 ∑v gv guards. Evaluating these polynomially many
+intervals finds it deterministically.
+
+Theorem 5.2 (Implicit projected q-Horn terminal). Suppose each factor admits exact partial-assignment
+extension queries and private witness recovery, with maximum query cost Q( N ), and the private domains of
+the factors are disjoint. Given an integer budget k, a deterministic algorithm uses
+
+                                               26k poly( N ) Q( N )
+
+bit operations and returns a correct decision with witnesses, or returns DECLINE. It cannot return DECLINE
+when ρ(C) ≤ k.
+
+Proof. Maintain a list of valid weighting inequalities, initially empty. Solve the corresponding rational
+LP. If its optimum exceeds k, decline. Otherwise perform the threshold construction of Lemma 5.1
+and enumerate the at most 26k guard assignments. The guard-count bound uses only the maintained
+simplex constraints. We do not yet assume that every prime implicate has rounded weight at most
+one; violations of unacquired inequalities are detected below. The inequalities used below have
+bounded integer coefficients, so standard exact rational LP has polynomial bit complexity.
+   Fix one guard assignment. Normalize unguarded unit-weight literals as positive Horn coordi-
+nates, and call the half-weight coordinates binary coordinates. Start all Horn coordinates at zero.
+
+
+
+                                                        6
+
+<PARSED TEXT FOR PAGE: 7 / 21>
+
+Exact interfaces for satisfiability                                                         26 November 2026
+
+
+Query every factor with this complete Horn assignment and the guards fixed, leaving binary coor-
+dinates unassigned. If a query fails, delete pins one at a time until it is a minimal rejected partial
+assignment. Negating its pins gives a prime implicate of that factor.
+    If this implicate has rounded weight greater than one, use the small violating pattern from the
+rounding proof to add a weighting inequality and restart the LP. Otherwise, after the guards are
+removed, it has either no positive Horn literal, giving contradiction, or one positive Horn literal,
+forcing that coordinate to one. Every genuine solution in the branch must contain the current set
+of true Horn coordinates, by induction. A successful force adds a coordinate, so there are at most
+linearly many such steps.
+    Once every factor accepts the full Horn word with binary coordinates free, solve the accumulated
+2-CNF on the binary coordinates, initially empty. Test a candidate binary word against every factor.
+A rejected full word again yields a prime implicate. If its rounded weight is too large, refine the
+LP. Otherwise the conflict has at most two binary literals and only negative Horn literals, besides
+guards. A positive Horn literal together with a binary literal would violate the weight cap. A conflict
+containing a positive Horn literal but no binary literal is impossible here, because the factor already
+accepted that same complete Horn word with binaries free.
+   Remove the currently false guard and negative Horn literals and add the resulting unary or
+binary clause. This clause is necessary for every feasible Horn word above the current one: changing
+additional Horn coordinates from zero to one cannot make an already false negative Horn literal true.
+Consequently an inconsistent accumulated 2-CNF correctly refutes the branch. Otherwise repeat.
+Each new binary clause rejects the current candidate and cannot already be in the accumulated
+2-CNF; only polynomially many distinct unary and binary clauses exist.
+    Every weighting violation is witnessed by at most three signed literals. Their current original
+fractional weights sum to more than one. The inequality that their sum be at most one is valid
+for every genuine feasible weighting, since they are a subset of a prime implicate and weights are
+nonnegative. This subset need not be a logical clause; it is used only as an LP inequality. There are
+O( N 3 ) such subsets, so LP restarts are polynomially bounded.
+    If a common complete word is accepted, recover each factor’s independent private witness. If
+all guard branches are refuted, reject. All learned logical constraints are necessary in their retained
+guard contexts, so every decision is sound even before all prime-implicate inequalities have been
+discovered. If the true fractional optimum is at most k, every maintained relaxation has optimum
+at most k, preventing a decline. Conflict minimization takes polynomially many extension queries.
+These bounds establish the claimed total charge.
+
+Corollary 5.3 (Improved forest signal terminal). For an acquired preference and integer guard budget k,
+the exact signal network has a clocked terminal of cost
+
+                                      2τmax +6k poly( N ),       τmax = max τB .                             (3)
+                                                                          B
+
+It decides the source whenever ρsignal ≤ k, with all optimal crossing-cover acquisition included. The preference
+itself must also be acquired within the stated overall budget.
+
+Proof. Combine Theorems 3.1, 4.2, and 5.2. The ownerless factor has an immediate partial-extension
+test because its clauses are negative. There are only polynomially many blocks and signals.
+
+    For nonintegral ρsignal , choosing k = ⌈ρsignal ⌉ changes the bound by at most a constant factor
+ 6
+2 . Equation (3) improves the original exponent 2τmax + 6k. The stronger acquisition conclusion is
+
+                                                             7
+
+<PARSED TEXT FOR PAGE: 8 / 21>
+
+Exact interfaces for satisfiability                                                        26 November 2026
+
+
+polynomial maximum matching, rather than a parameterized minimum-cover search.
+
+
+6    A stronger conservation law
+
+Return to the original balanced source. Let D = B DB , let d = | D |, and let t be the number of source
+                                                      ⋃
+
+clauses meeting D. A source clause disjoint from D is clean. Put
+
+                                      τΣ = ∑ τB ,     b× = |{ B : τB > 0}|.
+                                            B
+
+The definitions of ρsignal and τΣ concern different aspects of the same exact signal representation.
+Their bounds are not bounds on all algorithms for SAT.
+
+Lemma 6.1 (Clean clauses survive as prime implicates). Every clean source clause induces the identical
+signed clause on shared singleton signals as a prime implicate of its owner factor, or of the ownerless factor.
+Consequently,
+                                          ρsignal ≥ n/3 + d − t.                                            (4)
+
+Proof. Every variable outside D is represented at its negative occurrences by its singleton signal.
+Falsifying the singleton clause pins all required owner-output bounds to zero and all incoming
+singleton activations to one. No local extension is possible.
+    After removing any one of these falsification pins, set other incoming activations to zero, other
+outgoing bounds to one, and all internal variables to one except the owners still pinned to zero.
+If the removed pin was an activation, deactivate the selected clause; if it was an owner bound,
+the freed owner satisfies it. Another activated owned clause could fail only if all its owners and
+required incoming singleton signals were among the remaining pins. Proper ternary width and
+clause distinctness would then make it the selected source clause. Thus the reduced pin set extends.
+The ownerless case follows by the same subset argument. The clause is therefore prime.
+    Choose an optimal fractional weighting, so that ρsignal = ∑v gv . A clean variable contributes total
+literal weight 2(1 − gv ) across its four source occurrences. The m − t clean clauses have weight at
+most one. The dirty clauses have 3t − 4d occurrences of clean variables, each of weight at most one.
+Therefore
+                              2(n − d) − 2 ∑ gv ≤ (m − t) + (3t − 4d).
+                                                 ∈D
+                                                v/
+
+Substitute m = 4n/3 and use ρsignal ≥ ∑v/∈ D gv .
+
+Lemma 6.2 (Occurrence-sensitive cover bounds).
+
+                                         d ≤ 3τΣ ,        4d − t ≥ d − τΣ .                                (5)
+
+Proof. Choose minimum covers CB , put C = B CB , and let I = D \ C. No outgoing conjunction
+                                                      ⋃
+
+contains two elements of I. For each u ∈ I, choose one source clause containing u in a nonsingleton
+outgoing group. In a fixed block the selected conjunctions are distinct. Across different blocks, a
+ternary clause cannot contain two disjoint nonsingleton groups, since that would require at least four
+variables. Thus the selected source clauses are distinct.
+   Each selected clause contains a member of C in a negative normalized occurrence. Each cover
+variable has at most two such occurrences, so | I | ≤ 2|C | = 2τΣ , proving d ≤ 3τΣ .
+
+
+                                                          8
+
+<PARSED TEXT FOR PAGE: 9 / 21>
+
+Exact interfaces for satisfiability                                                          26 November 2026
+
+
+      For a dirty clause A, write r A = | A ∩ D |. Exact balance gives ∑ A r A = 4d, whence
+
+                                                4d − t = ∑(r A − 1).
+                                                           A
+
+Every one of the | I | distinct selected clauses has r A ≥ 2. The sum is therefore at least | I | = d − τΣ .
+
+Theorem 6.3 (Conservation with coefficient seven). Every preference word on a balanced source satisfies
+
+                                              ρsignal + 2d + τΣ ≥ n/3,                                         (6)
+                                                   ρsignal + 7τΣ ≥ n/3.                                        (7)
+
+Proof. The second inequality in (5) gives t ≤ 3d + τΣ . Combine this with (4) to get (6). Substitute
+d ≤ 3τΣ to obtain (7).
+
+    This improves the coefficient 15 in [1] and 25/2 in [2]. No optimality of the coefficient seven is
+claimed.
+
+Corollary 6.4 (Necessary distributed structure). If c > 0, ρsignal ≤ c log2 ( N + 2), and τmax ≤ c log2 ( N +
+2), then, whenever the numerator is positive,
+
+                                                   n/3 − c log2 ( N + 2)
+                                            b× ≥                         .
+                                                     7c log2 ( N + 2)
+
+If the source incidence graph has girth g, every complex block has at least g/2 variables, and b× ≤ 2n/g.
+
+Proof. Use τΣ ≤ b× τmax in (7). For the girth assertion, two same-block variables in an outgoing
+nonsingleton group are joined by a simple owner-incidence path. The outgoing clause closes this
+path into a source-incidence cycle with at most 2| B| edges. Blocks are disjoint.
+
+    The inequalities rule out simultaneous small aggregate crossing cover and small fractional guard
+cost. They do not rule out many inexpensive blocks whose individual covers are small. The next
+section makes one form of such distributed composition exact.
+
+
+7     Algebraic interfaces that combine many local kernels
+
+7.1     Exact compilation into nonzero binary pairs
+
+The following compilation makes the algebraic terminal relevant to the original SAT source. For
+Boolean literals a, b, c, including their affine expressions over F2 ,
+
+                          a∨b∨c          ⇐⇒      ∃u [NAE( a, b, u) ∧ NAE(1 + u, c, 0)].                        (8)
+
+If a = b = 0, the first constraint forces u = 1, and the second forces c = 1. If a = b = 1, choose u = 0.
+If a ̸= b, choose u = 0. This proves both directions and gives an extension.
+      Moreover,
+                                      NAE( a, b, c) ⇐⇒ ( a + b, b + c) ̸= (0, 0).
+Introduce one observation pair for each NAE constraint. Their common affine image has the form
+z = Lx + t0 . A basis of the left kernel of L gives a polynomially acquired system Az = At0 defining
+
+                                                          9
+
+<PARSED TEXT FOR PAGE: 10 / 21>
+
+Exact interfaces for satisfiability                                                                  26 November 2026
+
+
+exactly that image. An accepted z lifts by Gaussian elimination to x, including the private bits from
+(8). We obtain an exact system
+                                     Az = t,     zi ∈ F22 \ {00}.                                   (9)
+The number of rows, columns, and witness-map bits is polynomial in N. No counting preservation is
+required.
+
+
+7.2     The general composition theorem
+
+Let module i have private variables xi , a predicate Φi ( xi ), and a linear map Ai into a common binary
+vector space W. Assume the only coupling is
+                                                     M
+                                                     ∑ Ai xi = t.                                                (10)
+                                                     i =1
+
+Define
+                                      Vi = im Ai ,          Di = { Ai xi : Φi ( xi )}.
+Empty domains are allowed. The required local oracle decides whether d ∈ Di and returns a private
+witness. Its bit cost is Qi ( N ).
+    Supply a rooted binary tree T with the modules as leaves. For its node S, identified with its leaf
+set, define
+                         VS = ∑ Vi ,      BS = VS ∩ VS ,    bS = dim BS .                         (11)
+                                      i ∈S
+
+This is the standard intersection-of-spans width of a subspace arrangement [8]. Let D (T ) denote the
+charged cost of acquiring the supplied tree, if acquisition is part of the computation.
+
+Theorem 7.1 (Exact algebraic-interface composition). The system (10) has an exact deterministic decision
+and witness algorithm with bit cost at most
+                                            [                               ]
+                                                         M
+                           D (T ) + poly( N ) 1 + ∑ 2b{i} Qi ( N ) +           ∑ 2b + b  A   B
+                                                                                                 .               (12)
+                                                       i =1                  S= A∪˙ B
+
+All subspace bases and the width of a supplied tree are checkable in polynomial time.
+
+Proof. First test whether t ∈ V[ M] ; otherwise reject. If it is, use Gaussian elimination to choose ti ∈ Vi
+with ∑i ti = t. Put Di′ = Di + ti . The task is now to choose di′ ∈ Di′ whose sum is zero.
+   At node S, store the exact set
+                                             TS = BS ∩ ∑ Di′ .                                          (13)
+                                                                   i ∈S
+
+These are internal feasible sums compatible with the exterior linear span. The definition does not
+assume the exterior already has a feasible assignment.
+    At a leaf, enumerate the 2b{i} vectors s ∈ B{i} , query s + ti ∈ Di , and store a corresponding witness
+for every positive answer.
+      For children A, B of S, the exact recurrence is
+
+                                              TS = ( TA + TB ) ∩ BS .                                            (14)
+
+
+
+                                                              10
+
+<PARSED TEXT FOR PAGE: 11 / 21>
+
+Exact interfaces for satisfiability                                                        26 November 2026
+
+
+The right side joins witnesses from disjoint private domains, so it is contained in the left side.
+Conversely, write an element s ∈ TS as s = a + b, with a an actual sum from A and b an actual sum
+from B. Since s ∈ VS ,
+                                a = s + b ∈ VA ∩ (VB + VS ) = B A .
+Similarly b ∈ B B . Thus a ∈ TA and b ∈ TB , proving the reverse inclusion. No local domain is replaced
+by its affine hull.
+   Enumerate all pairs of child entries, test their sum for membership in BS , and retain one pair of
+back pointers for each resulting entry. The root interface is {0}. The instance is satisfiable exactly
+when its table contains zero; following back pointers reconstructs every private witness. Tables
+have at most 2bS entries, and a join has at most 2b A +bB candidate pairs. Linear algebra and pointer
+encodings have fixed polynomial overhead. Summing the actual acquisition, leaf, and join costs
+proves (12).
+
+Corollary 7.2 (Polynomial aggregate exponential work). Suppose M ≤ N a , Qi ( N ) ≤ 2ki N c , and
+D (T ) ≤ N e , for fixed constants. If every leaf satisfies
+
+                                         b{i} + k i ≤ d log2 ( N + 2)
+
+and every join satisfies b A + bB ≤ d log2 ( N + 2), the entire computation is polynomial. The sum ∑i k i need
+not be logarithmic.
+
+Proof. Every exponential summand in (12) is polynomially bounded, and the number of summands
+is polynomial. More generally, the displayed aggregate sum itself may serve as the budget; uniform
+maximum bounds are sufficient but not necessary.
+
+Remark 7.3 (The local oracle is a substantive hypothesis). The oracle asks whether Φi ( xi ) ∧ Ai xi = d
+is feasible. This is an affine-image fiber query, not merely a coordinate pin. A polynomial extension
+oracle for a matching or 2-SAT module does not automatically answer this stronger query. For a
+single pair in (9), the domain has just three points, so the oracle is explicit and inexpensive.
+
+Corollary 7.4 (Punctured-pair terminal). For (9), a supplied subspace tree of width w = maxS bS gives an
+exact algorithm in D (T ) + 22w poly( N ) time. A polynomially acquired tree with w = O(log N ) therefore
+gives a polynomial terminal.
+
+Proof. For the two-column block Ai , compute the domain Di = { Ai zi : zi ̸= 00} from its three
+possibilities. Apply Theorem 7.1, using b A + bB ≤ 2w at every join and storing a nonzero preimage
+for every accepted leaf contribution.
+
+   Known fixed-parameter acquisition algorithms for subspace arrangements [8] do not, merely
+by being fixed-parameter, prove polynomial discovery at w = O(log N ). The actual parameter
+dependence must be bounded. The co-owner forests in Section 2 are different objects from the
+decomposition tree in (11).
+
+
+7.3   An infinite family beyond rank saturation
+
+Theorem 7.5 (A strictly expanding family with constant interfaces). Let e0 , . . . , e M be independent, and
+set
+                        Vi = span(ei−1 , ei ), Di = Vi \ {0} (1 ≤ i ≤ M).
+
+                                                     11
+
+<PARSED TEXT FOR PAGE: 12 / 21>
+
+Exact interfaces for satisfiability                                                        26 November 2026
+
+
+For every nonempty set S of module indices,
+
+                                      dim VS = |S| + runs(S) > |S|,
+
+where runs(S) counts its consecutive intervals. Nevertheless a binary tree built from consecutive intervals has
+width at most two. The target-zero problem is solved in polynomial time and has exactly FM−1 witnesses for
+M ≥ 2, with F1 = F2 = 1.
+
+Proof. Each interval of r consecutive planes spans r + 1 distinct coordinates; disjoint runs have
+disjoint coordinate sets. This gives the rank formula. For an interval cut, only its two endpoint
+coordinates can occur on both sides, proving width at most two.
+    Write the choice in plane i as ai ei−1 + bi ei . A zero total forces a1 = b M = 0 and bi = ai+1 . With
+c0 = c M = 0 and ci = bi = ai+1 , the nonzero-pair condition is exactly (ci−1 , ci ) ̸= (0, 0). Thus
+consecutive zeros are forbidden, and the internal sequence begins and ends with one. Its count is
+the Fibonacci recurrence with the stated initial values. Theorem 7.1 decides the family with at most
+sixteen candidate pairs per join after linear algebra setup.
+
+   The family remains strictly rank-expanding on every nonempty subset, so the rank-saturation
+terminal alone does not remove it. It supplies a proved infinite class for which algebraic interfaces
+resolve exponentially many global choices. It supplies no universal width bound.
+
+
+8     Exact compatibility of affine and binary constraints
+
+8.1   The bounded-rank generator theorem
+
+The following result was developed in EX22-11 [4]. Its proof uses only explicit 2-CNF and affine
+constraints, so it transfers without any assumption about the native EX22 source.
+
+Theorem 8.1 (Joint 2-CNF and affine feasibility). Let B be an explicit 2-CNF on n variables and Ax = b
+an explicit system over F2 , of rank r. Joint satisfiability and a witness are obtainable with at most
+
+                                                 min(r,q) (       )
+                                                              q
+                                                   ∑          j
+                                                   j =0
+
+candidate tests, polynomial work per test, and polynomial peak space, where q ≤ n is the number of flip-
+implication SCCs defined below. The rank of their syndrome columns may replace r.
+
+Proof. Use a deterministic 2-SAT algorithm [9] to acquire a model a of B, rejecting if none exists.
+Gauge x = a + d. Since d = 0 satisfies every resulting clause, each nontrivial clause is a negative unit,
+a negative pair, or an implication di ⇒ d j .
+   A feasible flip set is therefore forward closed in the implication graph and avoids all forbidden
+vertices and pairs. Collapse its strongly connected components. Every feasible set is a union of SCCs,
+and the condensation is a DAG. Give an SCC C the syndrome column wC = A1C , and put t = b + Aa.
+    If a joint solution exists, choose an inclusion-minimal feasible SCC set D of syndrome t. Let G be
+the source vertices of the DAG induced by D. All of D is the union of their full forward closures. If
+the columns wC , C ∈ G, were dependent, a nonempty subset E ⊆ G would have zero total syndrome.
+Delete just those source SCCs, retaining all other selected SCCs, including descendants. No retained
+
+                                                       12
+
+<PARSED TEXT FOR PAGE: 13 / 21>
+
+Exact interfaces for satisfiability                                                             26 November 2026
+
+
+selected SCC has an edge into a removed source, so forward closure survives. Forbidden-vertex
+and forbidden-pair conditions survive deletion as well. The syndrome is unchanged, contradicting
+minimality.
+    The source columns are thus independent and | G | ≤ r. Enumerate all subsets of at most r SCC
+seeds, take the union of their full reachability closures, and test the original binary clauses and affine
+syndrome. The minimal solution above appears among the candidates. Polynomial-size reachability
+bitsets and depth-first candidate enumeration give the claimed space bound.
+
+  Overlapping closures must be unioned on actual variable IDs before computing their syndrome.
+Summing closure syndromes can cancel duplicated variables incorrectly.
+    For fixed r, Theorem 8.1 is polynomial. For r = O(log N ), this particular bound is N O(log N ) , not a
+fixed polynomial. It must not be substituted for the 2O(r) bounds in Corollary 7.2.
+
+Corollary 8.2 (Distributed affine and binary modules). In Theorem 7.1, suppose each private predicate is
+an explicit 2-CNF Bi , its affine contribution has rank ri , and its gauged implication graph has qi SCCs. Put
+
+                                                      min(ri ,qi ) (      )
+                                                                       qi
+                                               Ci =      ∑              j
+                                                                            .
+                                                         j =0
+
+The required image-fiber oracle has cost Ci poly( N ). A polynomially acquired tree gives a polynomial solver
+whenever, for fixed constants,
+
+                           b{i} + log2 Ci = O(log N )        and         b A + bB = O(log N )
+
+at every leaf and join. A sufficient leaf condition is
+
+                                       b{i} + ri log2 (qi + 1) = O(log N ).
+
+The total rank summed over modules may be unbounded.
+
+Proof. First reject if any private Bi is unsatisfiable; otherwise acquire a model to define its flip SCCs.
+Apply Theorem 8.1 to Bi ( xi ) ∧ Ai xi = d for each requested contribution d. Its rank is at most ri .
+Substitute its exact candidate count into (12); use Ci ≤ (qi + 1)ri , including Ci = 1 when ri = 0.
+
+
+8.2   A second terminal from incidence width
+
+For a system containing binary clauses and affine rows, form a graph with actual variable vertices,
+one vertex for each affine row, an edge for every variable-row incidence, and an edge between the
+variables of each binary clause. A long parity row is not expanded into a clique.
+
+Theorem 8.3 (Mixed incidence dynamic programming). A supplied width-w tree decomposition of this
+graph yields exact feasibility and witness recovery in 2O(w) poly( N ) time and space. A width O(log N )
+promise can be recognized sufficiently for this terminal by deterministic single-exponential treewidth approxi-
+mation.
+
+Proof. Use a nice tree decomposition and assign each incidence edge and binary clause to one
+processing event. A state stores the Boolean values of live variable vertices and one partial XOR
+for each live affine-row vertex. At an incidence event, add that variable’s contribution to the row’s
+
+
+                                                          13
+
+<PARSED TEXT FOR PAGE: 14 / 21>
+
+Exact interfaces for satisfiability                                                        26 November 2026
+
+
+accumulator. Check a binary clause when its variables are simultaneously present. When a row is
+forgotten, require its completed XOR to equal its right-hand side.
+    At a join, variable assignments must agree and partial XORs combine by addition over F2 . Each
+incidence is processed exactly once, so there is no double counting. Back pointers retain witnesses.
+There are at most 2w+1 states in a bag and at most 2O(w) candidate combinations at a join.
+    For acquisition, the algorithm of Korhonen [10] takes 2O(k) n time and either constructs a decom-
+position of width at most 2k + 1 or certifies treewidth greater than k. Taking a fixed logarithmic
+budget k is polynomial. This recognizes a restricted terminal; it does not establish that all source
+instances enter it.
+
+    The parity-state method is consistent with the broader single-exponential incidence-width compi-
+lation results of de Colnet, Szeider, and Zhang [11], and with the recent FP20 report [12]. Different
+affine row bases can have different incidence graphs, so basis selection remains a charged operation.
+
+Proposition 8.4 (Arbitrary mixing remains NP-complete). Conjunctions of 2-CNF clauses and affine
+equations over F2 are NP-complete, even when every affine equation has arity three.
+
+Proof. Membership in NP is immediate. A positive exact-one-in-three constraint is exactly
+
+                    x+y+z = 1         (mod 2),      (¬ x ∨ ¬y) ∧ (¬ x ∨ ¬z) ∧ (¬y ∨ ¬z).
+
+Odd parity permits weights one and three, and the binary clauses exclude weights at least two. This
+gives a linear reduction from positive exact-one-in-three SAT, an NP-complete language [13].
+
+   Proposition 8.4 is not a proof that the mixed system has no polynomial algorithm. It proves
+that separately tractable factor types do not, by themselves, supply such an algorithm. A joint rank,
+width, or other exact compatibility theorem is still required.
+
+
+9    Cooperative recursion with an aggregate polynomial budget
+
+Parallel tracks help only through a proved coverage or information-sharing property. Their computa-
+tion is charged by total work, including failed tracks. A polynomial number of tracks, each with a
+known polynomial clock, has polynomial aggregate cost, but this fact does not prove that some track
+must succeed.
+
+Theorem 9.1 (Strict polynomial-potential recursion). Suppose each recursive job R has a positive integer
+measure µ( R), and every nonterminal expansion into all actually executed child jobs R1 , . . . , Rq satisfies
+                                            q
+                                           ∑ µ ( Ri )c ≤ µ ( R )c − 1                                     (15)
+                                           i =1
+
+for a fixed integer c ≥ 1. If the root measure is at most N d , and local acquisition, verification, terminal
+work, and reconstruction cost at most N e per job, then the complete recursion has at most N cd jobs and costs
+N cd+e+O(1) . Its retained encodings must also be polynomially bounded per job.
+
+Proof. By induction, the number of nodes below a job is at most µ( R)c . A terminal consumes one
+node and has µ( R)c ≥ 1. A nonterminal consumes one plus the child node counts, bounded by one
+plus the left side of (15). Sum the local costs over the resulting node bound. Shared DAG nodes
+
+                                                      14
+
+<PARSED TEXT FOR PAGE: 15 / 21>
+
+Exact interfaces for satisfiability                                                      26 November 2026
+
+
+can be charged when first computed; their acquisition and equivalence tests remain part of the local
+cost.
+
+Corollary 9.2 (Paid local exponential response jobs). Let n, a, q be positive integers with 0 < a < n, let
+c ≥ 2 be a fixed integer, and suppose an operation creates q jobs of measure at most a and one of measure at
+most n − a. If
+                                              q ≤ (n/a)c−1 ,
+then qac + (n − a)c ≤ nc − 1.
+
+Proof.
+                qac + (n − a)c ≤ anc−1 + (n − a)(n − a)c−1 < anc−1 + (n − a)nc−1 = nc .
+The quantities are integers.
+
+      When q = 2g , the sufficient condition is
+
+                                          g ≤ (c − 1) log2 (n/a).
+
+Thus exponentially many local jobs can fit a polynomial global budget, but their permitted number
+depends on the size of the part being processed. If an interface adds h units of encoding or measure,
+the actual inequality must use q( a + h)c + (n − a + h)c . Dropping that overhead would invalidate
+the charge. This generalizes the budgeted contraction argument of the recent P4DM report [14].
+
+
+9.1      Exact two-child gluing and its remaining cost
+
+For one punctured observation pair a( x ) + s a , b( x ) + sb , its nonzero requirement is the union of the
+two equations
+                               a( x ) = 1 + s a or b( x ) = 1 + sb .
+Accordingly the full feasible relation is the union of its two restricted child relations. This identity
+is exact, including on retained boundary variables. The older RT39 report [15] develops an exact
+two-child orientation classification for strict deficiency-one geometries, with affine gluing of child
+classifications.
+    Exact gluing alone does not bound recursion. Even if each child loses one rank unit, T (r ) ≤
+2T (r − 1) + poly( N ) permits exponential work. Memoization helps only after the number of distinct
+relevant states and the acquisition of their equivalences are bounded. Equation (15), or the explicit
+aggregate sum in (12), provides a sufficient resource certificate when its hypotheses are proved.
+
+
+9.2      Contextual absorption
+
+A private module M(U, B) with exterior E( B, Z ) may be replaced by M′ (U ′ , B) if their projected
+boundary relations agree on every boundary value allowed by a certified necessary exterior condition
+L( B), where E ⇒ L. A direct proof replaces the private witness while keeping the boundary and
+exterior fixed.
+    The condition L must be obtained without circularly assuming the module response being
+removed. Exact 2-CNF plus affine charts can test relevant absorption questions using Theorem 8.1 at
+fixed rank, or Theorem 8.3 at logarithmic incidence width. An arbitrary affine/binary exterior is not
+automatically affordable, as Proposition 8.4 demonstrates.
+
+                                                    15
+
+<PARSED TEXT FOR PAGE: 16 / 21>
+
+Exact interfaces for satisfiability                                                      26 November 2026
+
+
+10     What transfers from algebraic complexity and identity testing
+
+The public Anthropic repository claims a separation of algebraic complexity classes and explicitly
+states that it does not settle P versus NP [16]. OpenAI’s scope documentation distinguishes exact
+formalized arithmetic statements from stronger quantitative statements in its accompanying papers
+[17]. We inspected those distinctions and relevant source definitions; we did not independently run
+or validate either formal proof development. No claimed external separation is a premise of any
+theorem in this manuscript.
+    The useful methodological transfer is to specify the external computational problem, the internal
+formal representation, and both directions of their correspondence. It also requires charging table
+sizes and conversion overhead, and keeping exact polynomial computation separate from Boolean
+support testing.
+
+Proposition 10.1 (Ordinary identity testing is not the missing SAT algorithm). A small arithmetic
+circuit that agrees with a Boolean formula on Boolean inputs need not be the zero formal polynomial when the
+formula is unsatisfiable.
+
+Proof. The contradictory formula x ∧ ¬ x has the arithmetic representative x (1 − x ). This vanishes at
+every Boolean point and is a nonzero formal polynomial over every field.
+
+   Reduction modulo xi2 − xi corrects the semantic mismatch, but a polynomially affordable exact
+normal form or identity test in that quotient would itself require proof. Likewise, define
+
+                                        GF ( X ) =      ∑        ∏ Xi .
+                                                     a∈Sol( F ) i:ai =1
+
+Distinct assignments give distinct squarefree monomials, so GF ̸= 0 over every field exactly when
+F is satisfiable. Its definition does not provide a polynomial-size, uniformly constructible circuit.
+An exact circuit construction and an adequate deterministic identity test would both have to be
+established. Counting models modulo two is different again: a nonempty even-sized solution set can
+have zero parity.
+   Möbius inversion on an explicit Boolean response table is valid and can compress particular
+families of functions. It does not remove the cost of acquiring all required table entries. Recent finite
+response compression [18] is therefore useful only with a proved response-acquisition bound and an
+exact treatment of infeasible boundary words.
+
+
+11     The conditional theorem and the unresolved universal step
+
+We now state the strongest justified route from the proved terminals to the requested complexity
+conclusion. The statement is a sufficient condition, not a claim that its hypothesis has been established.
+
+Definition 11.1 (Complete cooperative configuration). A configuration records all pending guarded
+obligations, exact AND/OR dependencies, compatibility conditions, known tables, witness maps,
+and cached results for one original source. It is feasible if its retained data admit at least one complete
+original source witness. A transition is sound if every accepted complete witness lifts to a source
+witness, and feasibility preserving if a feasible configuration remains feasible until a witness is
+returned. Encoded size and the cost of all active tracks are charged jointly. The initial configuration is
+
+
+                                                       16
+
+<PARSED TEXT FOR PAGE: 17 / 21>
+
+Exact interfaces for satisfiability                                                   26 November 2026
+
+
+the original source formula with no additional restrictions; its identity encoding is constructed in
+O( N ) time.
+Conjecture 11.2 (Universal affordable acquisition or contraction). There are fixed positive constants
+a, b, c, a fixed deterministic procedure, and a nonnegative integer potential Φ on the reachable
+complete configurations, with initial value at most ( N + 2) a , having the following properties.
+
+
+Uniform total work. Each transition, including all discovery attempts, verification, executed termi-
+nal work, and retained reconstruction, halts within ( N + 2)b bit operations. All stored representations
+and records fit ( N + 2)c bits. These caps apply on satisfiable and unsatisfiable inputs.
+
+
+Sound transformations. Every accepted transition has authenticated source semantics and pre-
+serves feasibility. Compatible witnesses are required at AND nodes; guard identities are retained at
+OR nodes. An unresolved terminal may return DECLINE, which does not mean UNSAT.
+
+
+Universal productive coverage. On every feasible reachable configuration without an available
+verified source witness, the procedure either completes witness recovery or acquires an exact terminal
+or reduction whose full execution preserves feasibility and decreases Φ by at least one. The acquired
+operation may use the signal terminal, algebraic-interface terminal, mixed affine/binary terminal, or
+another independently proved terminal. Every child, interface, failed probe, and cooperative track is
+charged in the same global configuration.
+
+   One concrete way to establish the potential clause is Theorem 9.1. Another is to acquire a complete
+algebraic decomposition whose sum (12) has a fixed polynomial bound. Merely knowing that an
+inexpensive terminal exists somewhere is insufficient; the deterministic procedure must acquire a
+successful operation.
+Theorem 11.3 (Conditional constructive implication). Conjecture 11.2 implies P = NP.
+
+Proof. On a source of Definition 1.1, run the fixed cooperative procedure for a sufficiently large fixed
+polynomial clock, for example a constant multiple of
+
+                                           ( N + 2 ) a + b + c +2 ,
+which includes initialization, all potential-decreasing transitions, and final witness processing. When-
+ever a candidate source assignment appears, check it directly against the original formula.
+    On a satisfiable input, the initial configuration is feasible. By authenticated preservation and
+universal productive coverage, a feasible unfinished configuration cannot stagnate. At most ( N + 2) a
+strict decreases of a nonnegative integer potential are possible. A verified source witness must
+therefore be produced within the clock.
+    On an unsatisfiable input, no source assignment can pass verification. Return SAT exactly on a
+verified assignment and UNSAT if the clock expires without one. The satisfiable-side guarantee just
+proved makes the latter decision correct. The procedure is deterministic, total, and polynomial. Since
+the balanced source is NP-complete [3], every language in NP has a polynomial-time algorithm.
+
+   The fixed clock in this theorem is justified by the conjecture, not by the present-day behavior of a
+heuristic controller. One cannot currently run the available tracks for an arbitrary polynomial time
+and declare every timeout unsatisfiable.
+
+                                                     17
+
+<PARSED TEXT FOR PAGE: 18 / 21>
+
+Exact interfaces for satisfiability                                                    26 November 2026
+
+
+11.1    The attempted closure and the exact point where it stops
+
+Theorem 2.2 supplies a forest partition for every source, but does not force τmax + 6ρsignal = O(log N ).
+Theorem 4.1 makes crossing-cover acquisition polynomial, but the value of the cover can still grow.
+Theorem 6.3 explains why a small global guard budget must coexist with distributed local complexity.
+   Theorem 7.1 resolves that distributed complexity when the actual subspace interfaces are afford-
+able and the local fiber queries are exact. It does not prove that every compiled system has such a
+decomposition. Theorem 8.1 handles an acquired low-rank affine/binary chart, but its exponent
+grows with rank. Theorem 8.3 permits logarithmic width with affordable recognition, but there is no
+proved universal width or productive-alternative theorem.
+    The remaining mathematical obligation is therefore a universal, constructively acquirable disjunc-
+tion: every unsolved feasible configuration must have either an affordable exact joint representation
+or a sound reduction that decreases a globally charged polynomial potential. Neither a counterex-
+ample to one terminal nor a restricted arithmetic lower bound settles that disjunction. Its proof is
+necessary before Theorem 11.3 can be promoted to an unconditional P = NP theorem.
+
+
+12     Reproducibility and verification record
+
+Three complete Python programs and their result files accompany this manuscript. They use the
+Python standard library. All listed checks were executed in this revision; none is reported as a
+mechanized proof of the asymptotic theorems.
+
+              Verification                                                Number of checks
+              Block line-graph identities                                             13,056
+              Nonempty crossing graphs checked by independent cover                    8,436
+              and matching recurrences
+              Incidence inequalities underlying coefficient seven                      4,384
+              Local extension queries compared with exhaustive                         7,620
+              assignments
+              Algebraic dynamic-programming node tables compared with                292,756
+              exact definitions
+              Reconstructed nonzero-pair source witnesses                             47,955
+              Joint 2-CNF and affine comparisons on three variables                  251,955
+
+Table 1: Executed finite controls. Counts describe different test units and are not added as indepen-
+dent samples.
+
+
+Forest and matching audit. forest_new_audit.py checks all 4096 preferences of the twelve-
+variable control reproduced in the supplement, and 288 further preferences on 36 generated balanced
+formulas. It constructs the root multigraph and checks the line-graph identity. An independent
+minimum-cover recurrence agrees with maximum-matching cardinality on every tested nonempty
+crossing graph. The 7620 local queries include 6857 satisfiable and 763 unsatisfiable cases, with
+blocks of up to twelve variables. The coefficient-seven audit tests its structural incidence inequalities;
+it does not purport to solve every projected fractional LP.
+
+
+
+                                                   18
+
+<PARSED TEXT FOR PAGE: 19 / 21>
+
+Exact interfaces for satisfiability                                                               26 November 2026
+
+
+Algebraic interface audit. algebraic_interface_audit.py checks all 900 two-module sub-
+space/domain instances over F22 specified in the supplement, with all four targets. It also checks
+all 4096 three-block 2 × 2 binary matrices with four targets and three decomposition trees, for
+49152 source checks. Larger randomized controls add 2500 instances and 6470 target tests. Every
+table in the exhaustive and randomized controls is compared with its exact set-theoretic definition.
+Interval-family checks verify interface width and reconstructed witnesses through M = 64, with
+direct witness-count enumeration through M = 16. At M = 64, its exact target-zero witness count is
+6,557,470,319,842, while its algebraic interface width remains at most two.
+
+
+Affine and binary audit. hybrid_rank_audit.py enumerates the 166 distinct 2-CNF relations on
+three variables, including the empty relation, and 1527 affine systems with ordered independent
+rows. It performs 251955 exact joint comparisons for the nonempty binary relations; the empty
+relation is immediate. All compared answers agree with exhaustive assignment intersection.
+
+
+Review scope. Separate research tracks independently checked the forest/matching arguments, the
+algebraic-interface proof, and the new generator theorem, then cross-checked the principal lemmas.
+This is an internal mathematical audit with executable controls, not external peer review or proof-
+assistant verification. The primary papers are cited for established background; the new derivations
+are written out in this manuscript.
+
+
+A      Changes from the supplied manuscripts
+
+    Component                         Supplied forest spine                 Present revision
+    Crossing-cover acquisition        Maximal-matching                      Exact polynomial acquisition from a
+                                      two-approximation; later exact        line-graph root and maximum
+                                      parameterized search                  matching
+    Local query cost                  22τB poly( N )                        2τB (Q) poly( N ) with query-specific
+                                                                            caps
+    Combined signal terminal          22τmax +6k poly( N )                  2τmax +6k poly( N ), including cover
+                                                                            acquisition
+    Conservation inequality           ρsignal + 15τΣ ≥ n/3; later           ρsignal + 7τΣ ≥ n/3, with a stronger
+                                      coefficient 25/2                      intermediate bound
+    Distributed composition           Exact local signals and conditional   Exact linear-interface table recurrence
+                                      global compatibility                  with explicit aggregate cost
+    Infinite family                   Tetrahedral signal absorption         Additional strictly expanding
+                                      family                                path-plane family with constant
+                                                                            interface width
+    Affine and binary join            Separate terminals require            Complete source-SCC generator
+                                      compatibility                         proof and incidence-width terminal
+    Recursive resource charge         Polynomial live credit conjectured    Explicit child-power inequality and
+                                                                            local exponential budget
+    Global P = NP conclusion          Conditional                           Conditional; universal acquisition or
+                                                                            contraction remains unproved
+
+
+
+
+                                                             19
+
+<PARSED TEXT FOR PAGE: 20 / 21>
+
+Exact interfaces for satisfiability                                                       26 November 2026
+
+
+B     Provenance of recent ideas
+
+The repository review used a fixed interval from 23:48 on 25 November through 07:48:57 on 26
+November 2026, America/Los_Angeles. It identified 599 commits in the working repository and
+selected ten substantive reports for full reading. This count is a retrieval census, not an independent
+audit of every commit. The original RT39 report predates that interval and is included only because
+its exact gluing idea was raised again in the current research context.
+
+    Report              Commit prefix          Use in this manuscript
+    EX22-11             082b7ac676cc           Source-independent joint 2-CNF/affine generator
+                                               theorem, with a complete proof and independent
+                                               finite audit
+    FP20                b465c1710292           Mixed incidence-state interpretation; exact parity and
+                                               variable compatibility retained
+    P4DM                2d41d438561a           Strict aggregate recurrence permitting a bounded
+                                               amount of exponential local response work
+    P4FG22              dcff4fb4acc4           Response-table compression considered; no unproved
+                                               generic acquisition or promise preservation imported
+    RT39                52cd08ddb63d           Earlier exact two-child orientation idea; no
+                                               polynomial recursion bound imported
+
+
+   The supplement records full pinned URLs and hashes. Source-specific results on planar exact-
+one SAT, exact-two-of-four SAT, cubic edge coloring, and matching were used only where their
+assumptions could be restated and proved for the actual representation. Claimed universal closures
+absent from those reports were not inferred from their finite experiments.
+
+
+References
+ [1] P versus NP Research Program. A conditional constructive proof spine for P = NP, 2026. User-supplied
+     forest-interface manuscript, 25 November 2026, 35 pages. Universal exhaustion explicitly conjectural.
+ [2] P versus NP Research Program. Strengthened forest-interface proof spine, 2026. User-supplied nine-page
+     revision, retrieved 26 November 2026. Conditional status.
+ [3] Janosch Döcker. Monotone 3-Sat-(2,2) is NP-complete. arXiv:1912.08032, 2019. URL
+     https://arxiv.org/abs/1912.08032.
+ [4] P versus NP Research Program. EX22-11: Rank-bounded joint guard acquisition and contextual path
+     absorption, 2026. URL https:
+     //github.com/j15marti/pnp/blob/082b7ac676cc657cc06ac4422af093894425891d/research/proof
+     -spine-portfolio-2026-11-25/ex22/monotone-exact-22/2026-11-26_0713_EX22_11/report.md.
+     26 November, report label 07:13 Pacific. Commit 082b7ac676cc657cc06ac4422af093894425891d. Project
+     report, independently audited here only at stated scope.
+ [5] Michel X. Goemans. Lecture notes on matroid union, 2007. URL
+     https://math.mit.edu/~goemans/18433S07/matroidunion.pdf. MIT 18.433, Handout 17, 19 April.
+ [6] Jack Edmonds. Paths, trees, and flowers. Canadian Journal of Mathematics, 17:449–467, 1965. doi:
+     10.4153/CJM-1965-045-4.
+
+
+
+
+                                                     20
+
+<PARSED TEXT FOR PAGE: 21 / 21>
+
+Exact interfaces for satisfiability                                                        26 November 2026
+
+
+ [7] Serge Gaspers, Sebastian Ordyniak, M. S. Ramanujan, Saket Saurabh, and Stefan Szeider. Backdoors to
+     q-horn. In 30th International Symposium on Theoretical Aspects of Computer Science, volume 20 of LIPIcs,
+     pages 67–79, 2013. doi: 10.4230/LIPIcs.STACS.2013.67.
+ [8] Jisu Jeong, Eun Jung Kim, and Sang il Oum. Finding branch-decompositions of matroids, hypergraphs,
+     and more. SIAM Journal on Discrete Mathematics, 35(4):2544–2617, 2021. doi: 10.1137/19M1285895. URL
+     https://arxiv.org/abs/1711.01381.
+ [9] Bengt Aspvall, Michael F. Plass, and Robert Endre Tarjan. A linear-time algorithm for testing the truth of
+     certain quantified boolean formulas. Information Processing Letters, 8(3):121–123, 1979. doi:
+     10.1016/0020-0190(79)90002-4.
+[10] Tuukka Korhonen. A single-exponential time 2-approximation algorithm for treewidth. arXiv:2104.07463,
+     2021. URL https://arxiv.org/abs/2104.07463. Version 3, 23 August 2023; FOCS 2021.
+[11] Alexis de Colnet, Stefan Szeider, and Tianwei Zhang. Compilation and fast model counting beyond CNF.
+     arXiv:2502.00434, 2025. URL https://arxiv.org/abs/2502.00434.
+[12] P versus NP Research Program. FP20: Weighted guarded color-incidence DP and a high-port/low-width
+     separation, 2026. URL https://github.com/j15marti/pnp/blob/b465c17102922071629e8c3f0ae0a7b
+     08e23eb01/research/agents/flow-plateau/2026-11-26_FP20_guarded_color_incidence_dp.md.
+     26 November. Commit b465c17102922071629e8c3f0ae0a7b08e23eb01.
+[13] Thomas J. Schaefer. The complexity of satisfiability problems. In Proceedings of the Tenth Annual ACM
+     Symposium on Theory of Computing, pages 216–226, 1978. doi: 10.1145/800133.804350.
+[14] P versus NP Research Program. P4DM: Budgeted exponential closure: Asymmetric contraction credit,
+     2026. URL https://github.com/j15marti/pnp/blob/2d41d438561a5b99c307645065930c1d09e4e6c
+     8/research/proof-spine-portfolio-2026-11-25/p4dm/strict-t5-csp/2026-11-26_0630_budgete
+     d-closure/report-and-handoff.md. 26 November, report label 06:30 Pacific. Commit
+     2d41d438561a5b99c307645065930c1d09e4e6c8.
+[15] P versus NP Research Program. RT39: Exact two-child orientation classification and global overlap
+     gluing, 2026. URL https://github.com/j15marti/pnp/blob/52cd08ddb63d947656e805254a659ac81
+     58f761a/research/hcl201/red-team/2026-11-25_0857_RT39.md. 25 November, report label 08:57
+     Pacific. Commit 52cd08ddb63d947656e805254a659ac8158f761a. Strict deficiency-one scope.
+[16] Anthropic. VP ̸= VNP over every field, 2026. URL https://github.com/anthropics/formal-math/tr
+     ee/918c8e2778aee18b0283dc5a33ed39ab3cd63a96/vp-vnp. Research artifact and README in
+     anthropics/formal-math, accessed 26 November. External arithmetic claim; no independent formal build
+     performed for this manuscript.
+[17] OpenAI. Euclidean tensor geometry and its applications to complexity and combinatorics, 2026. URL
+     https://github.com/openai/math/blob/92b516ef8e2abf66c3db7aa31438d3010bc7956f/lean/docs
+     /379.md. Formalization scope documentation, lean/docs/379.md, commit
+     92b516ef8e2abf66c3db7aa31438d3010bc7956f, accessed 26 November.
+[18] P versus NP Research Program. P4FG22: Split-monomial exact separator compression, 2026. URL
+     https://github.com/j15marti/pnp/blob/dcff4fb4acc452d437e90788c4f5488a429b98ce/research
+     /proof-spine-portfolio-2026-11-25/p4dm/closure-finite-groups/2026-11-26_0747_P4FG22/re
+     port.md. 26 November, report label 07:47 Pacific. Commit dcff4fb4acc452d437e90788c4f5488a429b98ce.
+
+
+
+
+                                                      21
