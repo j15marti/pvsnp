@@ -67,6 +67,20 @@ The conditional argument is to run the proposed witness finder with its hypothes
 
 The universal acquisition or contraction conjecture is **not proved**. The repository therefore does not claim an unconditional proof of $P=NP$ or $P\ne NP$. In particular, inexpensive supplied interfaces, local correctness, successful finite tests, and restricted-model obstructions do not establish a uniform worst-case polynomial decision bound.
 
+## Reproduce the computational audits
+
+The [verification supplement](verification/README.md) includes all three original Python audit programs, their expected results, scope limitations, and SHA-256 checksums. Each uploaded file matches the original manuscript source package. All three audits were rerun successfully on November 26, 2026.
+
+```bash
+git clone https://github.com/j15marti/pvsnp.git
+cd pvsnp/verification
+python3 forest_new_audit.py
+python3 algebraic_interface_audit.py
+python3 hybrid_rank_audit.py
+```
+
+Python 3.10 or later is sufficient; no third-party packages are required. Keep assertions enabled. Each program generates its adjacent JSON results.
+
 ## Verification and research directions
 
 The manuscript reports targeted finite audits, including 13,056 line-graph identities, 7,620 exhaustive-reference local extension queries, 292,756 algebraic interface-table comparisons, and 251,955 mixed 2-CNF/affine comparisons. These are reported computational controls, not independent peer review or a substitute for the missing universal theorem.
