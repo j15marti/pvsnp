@@ -4,6 +4,17 @@
 
 This project investigates whether a uniform deterministic polynomial-time algorithm for an NP-complete satisfiability problem can be constructed through exact constraint transformations, cooperative solver tracks, and provably bounded aggregate computation.
 
+## Current E/B model manuscript (27 November 2026)
+
+**Signed Four-Port Equality–Balance Networks:** formal model, NP-completeness reduction, canonical contraction and cooperative certificate framework. The universal aggregate-contraction theorem and P versus NP remain open.
+
+- [LaTeX manuscript and build instructions](documents/EB4_model_2026-11-27/README.md)
+- [Exact LaTeX source](documents/EB4_model_2026-11-27/eb4_model.tex) and [bibliography](documents/EB4_model_2026-11-27/references.bib)
+- [Shared E/B instance registry and SHA-256 fingerprints](https://github.com/j15marti/pnp/blob/0c14cdc57925788cf7a451dcd5aa171dce860f2c/research/coordination/shared-eb-2026-11-27/instance-registry-v1.json)
+- [Public proof release and independent audit protocol](https://github.com/j15marti/pnp/blob/fc87c43ad1a247e4133b931911f7cfa4afeb17c0/research/coordination/2026-11-27_PUBLIC_PROOF_RELEASE_GATE.md)
+
+The source and bibliography match the original locally compiled manuscript. The binary PDF upload is pending; it can be rebuilt using the documented LaTeX commands. These are model definitions, established scoped lemmas, and a conditional research framework, not a claimed resolution.
+
 ## Current manuscript
 
 **Jeremy Martinez, _Exact Forest and Algebraic Interfaces for Satisfiability: A constructive framework and a conditional theorem for P = NP_, 26 November 2026.** Research manuscript prepared with AI assistance for mathematical review.
